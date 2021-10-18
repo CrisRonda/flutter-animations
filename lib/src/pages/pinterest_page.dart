@@ -1,29 +1,94 @@
+import 'package:animations/src/widgets/floating_menu.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_staggered_grid_view/flutter_staggered_grid_view.dart';
+import 'package:provider/provider.dart';
 
 class PinterestPage extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
-    return Scaffold(
-      body: SafeArea(
-        child: GridView(),
-      ),
+    return ChangeNotifierProvider(
+      create: (_) => new _PageState(),
+      child: Scaffold(
+          body: Stack(
+        children: [GridView(), _Menu()],
+      )),
     );
   }
 }
 
-class GridView extends StatelessWidget {
+class _Menu extends StatelessWidget {
+  final List<ItemMenu> items = [
+    ItemMenu(icon: Icons.add_circle_outline_sharp, onPress: () => print("add")),
+    ItemMenu(icon: Icons.search, onPress: () => print("Search")),
+    ItemMenu(
+        icon: Icons.notification_add, onPress: () => print("Notifications")),
+    ItemMenu(
+        icon: Icons.supervised_user_circle, onPress: () => print("Supervise"))
+  ];
+  @override
+  Widget build(BuildContext context) {
+    final width = MediaQuery.of(context).size.width;
+    final show = Provider.of<_PageState>(
+      context,
+    ).show;
+    return Positioned(
+        bottom: 30,
+        child: Container(
+            width: width,
+            child: Align(
+                child: FloatingMenu(
+              show: show,
+              items: items,
+            ))));
+  }
+}
+
+class GridView extends StatefulWidget {
+  @override
+  State<GridView> createState() => _GridViewState();
+}
+
+class _GridViewState extends State<GridView> {
   final List items = List.generate(200, (index) => index);
+  ScrollController controller = new ScrollController();
+  double befScroll = 0;
+  @override
+  void initState() {
+    super.initState();
+    controller.addListener(() {
+      final provider = Provider.of<_PageState>(context, listen: false);
+      // print("Controller ${controller.offset}");
+      if (controller.offset > befScroll) {
+        provider.show = false;
+      } else {
+        provider.show = true;
+      }
+      befScroll = controller.offset;
+    });
+  }
+
+  @override
+  void dispose() {
+    controller.dispose();
+    super.dispose();
+  }
+
   @override
   Widget build(BuildContext context) {
     return new StaggeredGridView.countBuilder(
+      controller: controller,
       itemCount: items.length,
       crossAxisCount: 4,
       itemBuilder: (BuildContext context, int index) => TileItem(
         index: index,
       ),
-      staggeredTileBuilder: (int index) =>
-          new StaggeredTile.count(2,index.isEven ? index%3==0? 2:3:4),
+      staggeredTileBuilder: (int index) => new StaggeredTile.count(
+          2,
+          index.isEven
+              ? index % 3 == 0
+                  ? 2
+                  : 3
+              : 4),
       mainAxisSpacing: 16.0,
       crossAxisSpacing: 12.0,
     );
@@ -32,7 +97,7 @@ class GridView extends StatelessWidget {
 
 class TileItem extends StatelessWidget {
   final int index;
-  const TileItem({required this.index}); 
+  const TileItem({required this.index});
 
   @override
   Widget build(BuildContext context) {
@@ -46,5 +111,16 @@ class TileItem extends StatelessWidget {
             child: new Text('$index'),
           ),
         ));
+  }
+}
+
+class _PageState with ChangeNotifier {
+  bool _show = true;
+
+  bool get show => this._show;
+
+  set show(bool newShow) {
+    this._show = newShow;
+    notifyListeners();
   }
 }
