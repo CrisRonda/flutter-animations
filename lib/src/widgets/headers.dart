@@ -333,6 +333,12 @@ class IconHeader extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     final Color whiteWithOpacity = Colors.white.withOpacity(0.7);
+    bool isLarge = false;
+    final size = MediaQuery.of(context).size;
+    if (size.height > 500) {
+      isLarge = true;
+    }
+    final double rate = isLarge ? 1 : .5;
     return Stack(
       children: [
         _IconHeaderBackground(color1: primaryColorBg, color2: secondColorBg),
@@ -342,32 +348,32 @@ class IconHeader extends StatelessWidget {
           child: FaIcon(
             this.icon,
             color: whiteWithOpacity.withOpacity(0.3),
-            size: 250,
+            size: 250 * rate,
           ),
         ),
         Column(
           children: [
             SizedBox(
-              height: 100,
+              height: 100 * rate,
               width: double.infinity,
             ),
             Text(
               this.title,
-              style: TextStyle(fontSize: 20, color: whiteWithOpacity),
+              style: TextStyle(fontSize: 32 * rate, color: whiteWithOpacity),
             ),
-            SizedBox(height: 20),
+            SizedBox(height: 20 * rate),
             Text(
               this.subtitle,
               style: TextStyle(
-                  fontSize: 24,
+                  fontSize: 32 * rate,
                   color: whiteWithOpacity,
                   fontWeight: FontWeight.bold),
             ),
-            SizedBox(height: 20),
+            SizedBox(height: 20 * rate),
             FaIcon(
               this.icon,
               color: whiteWithOpacity.withOpacity(1),
-              size: 80,
+              size: 72 * rate,
             )
           ],
         )
@@ -387,12 +393,17 @@ class _IconHeaderBackground extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    bool isLarge = false;
+    final size = MediaQuery.of(context).size;
+    if (size.height > 500) {
+      isLarge = true;
+    }
     return Container(
       width: double.infinity,
-      height: 300,
+      height: isLarge ? 300 : 150,
       decoration: BoxDecoration(
         borderRadius: BorderRadius.only(
-          bottomLeft: Radius.circular(100),
+          bottomLeft: Radius.circular(isLarge ? 100 : 50),
         ),
         gradient: LinearGradient(
             begin: Alignment.topCenter,

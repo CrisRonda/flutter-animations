@@ -28,20 +28,25 @@ class _Menu extends StatelessWidget {
   ];
   @override
   Widget build(BuildContext context) {
-    final width = MediaQuery.of(context).size.width;
+    double width = MediaQuery.of(context).size.width;
     final show = Provider.of<_PageState>(
       context,
     ).show;
-    final appTheme = Provider.of<ThemeChanger>(context).currentTheme;
+    if (width > 500) {
+      width -= 300;
+    }
     return Positioned(
         bottom: 30,
         child: Container(
             width: width,
-            child: Align(
-                child: FloatingMenu(
-              show: show,
-              items: items,
-            ))));
+            child: Row(children: [
+              Spacer(),
+              FloatingMenu(
+                show: show,
+                items: items,
+              ),
+              Spacer(),
+            ])));
   }
 }
 
@@ -77,20 +82,23 @@ class _GridViewState extends State<GridView> {
 
   @override
   Widget build(BuildContext context) {
+    int count;
+
+    if (MediaQuery.of(context).size.width > 500) {
+      count = 3;
+    } else {
+      count = 2;
+    }
+
     return new StaggeredGridView.countBuilder(
       controller: controller,
       itemCount: items.length,
-      crossAxisCount: 4,
+      crossAxisCount: count,
       itemBuilder: (BuildContext context, int index) => TileItem(
         index: index,
       ),
-      staggeredTileBuilder: (int index) => new StaggeredTile.count(
-          2,
-          index.isEven
-              ? index % 3 == 0
-                  ? 2
-                  : 3
-              : 4),
+      staggeredTileBuilder: (int index) =>
+          new StaggeredTile.count(1, index.isEven ? 1 : 2),
       mainAxisSpacing: 16.0,
       crossAxisSpacing: 12.0,
     );

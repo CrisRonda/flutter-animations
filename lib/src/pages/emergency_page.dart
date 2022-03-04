@@ -22,6 +22,12 @@ class EmergencyPage extends StatelessWidget {
   Widget build(BuildContext context) {
     final currentTheme = Provider.of<ThemeChanger>(context);
     final isDarkMode = currentTheme.darkTheme;
+    bool isLarge = false;
+    final size = MediaQuery.of(context).size;
+    if (size.height > 500) {
+      isLarge = true;
+    }
+
     final items = <ServiceButtonProps>[
       new ServiceButtonProps(FontAwesomeIcons.carCrash, 'Motor Accident',
           Color(0xff6989F5), Color(0xff906EF5)),
@@ -63,19 +69,21 @@ class EmergencyPage extends StatelessWidget {
             ))
         .toList();
     return Scaffold(
-        body: Stack(children: [
-      Container(
-        margin: EdgeInsets.only(top: 250),
-        child: ListView(
-          physics: BouncingScrollPhysics(),
-          children: [
-            SizedBox(height: 32),
-            ...itemMap,
-          ],
+        body: SafeArea(
+      child: Stack(children: [
+        Container(
+          margin: EdgeInsets.only(top: isLarge ? 250 : 125),
+          child: ListView(
+            physics: BouncingScrollPhysics(),
+            children: [
+              SizedBox(height: 32),
+              ...itemMap,
+            ],
+          ),
         ),
-      ),
-      PageHeader()
-    ]));
+        PageHeader()
+      ]),
+    ));
   }
 }
 
@@ -84,7 +92,6 @@ class PageHeader extends StatelessWidget {
   Widget build(BuildContext context) {
     final currentTheme = Provider.of<ThemeChanger>(context);
     final isDarkMode = currentTheme.darkTheme;
-
     return Stack(children: [
       IconHeader(
         icon: FontAwesomeIcons.plusCircle,

@@ -9,14 +9,25 @@ class SlideShowPage extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    bool isLarge = false;
+    final size = MediaQuery.of(context).size;
+    if (size.height > 500) {
+      isLarge = true;
+    }
+
+    final children = [
+      Expanded(child: CustomOnboarding()),
+      Expanded(child: CustomOnboarding()),
+    ];
     return Container(
       color: Colors.brown,
-      child: Column(
-        children: [
-          Expanded(child: CustomOnboarding()),
-          Expanded(child: CustomOnboarding()),
-        ],
-      ),
+      child: isLarge
+          ? Column(
+              children: children,
+            )
+          : Row(
+              children: children,
+            ),
     );
   }
 }
