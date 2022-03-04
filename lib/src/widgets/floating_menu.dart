@@ -1,3 +1,4 @@
+import 'package:animations/src/theme/theme.dart';
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 
@@ -11,25 +12,37 @@ class ItemMenu {
 class FloatingMenu extends StatelessWidget {
   final bool show;
   final List<ItemMenu> items;
-
-  FloatingMenu({this.show = true, required this.items});
+  final Color bgcolor;
+  final Color activeColor;
+  final Color inactiveColor;
+  FloatingMenu(
+      {this.show = true,
+      required this.items,
+      this.bgcolor = Colors.white,
+      this.activeColor = Colors.amber,
+      this.inactiveColor = Colors.black45});
 
   @override
   Widget build(BuildContext context) {
+    final appTheme = Provider.of<ThemeChanger>(context).currentTheme;
     return AnimatedOpacity(
       opacity: show ? 1 : 0,
       duration: Duration(milliseconds: 544),
       child: ChangeNotifierProvider(
           create: (_) => new _MenuState(),
-          child: _Background(child: _MenuItems(items))),
+          child: _Background(
+            child:
+                _MenuItems(items, appTheme.accentColor, appTheme.primaryColor),
+            bgcolor: appTheme.scaffoldBackgroundColor,
+          )),
     );
   }
 }
 
 class _Background extends StatelessWidget {
   final Widget child;
-
-  const _Background({required this.child});
+  final Color bgcolor;
+  const _Background({required this.child, required this.bgcolor});
 
   @override
   Widget build(BuildContext context) {
@@ -38,7 +51,7 @@ class _Background extends StatelessWidget {
       width: 250,
       height: 60,
       decoration: BoxDecoration(
-          color: Colors.white,
+          color: bgcolor,
           borderRadius: BorderRadius.all(Radius.circular(100)),
           boxShadow: <BoxShadow>[
             BoxShadow(
@@ -53,15 +66,18 @@ class _Background extends StatelessWidget {
 
 class _MenuItems extends StatelessWidget {
   final List<ItemMenu> items;
-
-  const _MenuItems(this.items);
+  final Color activeColor;
+  final Color inactiveColor;
+  const _MenuItems(this.items, this.activeColor, this.inactiveColor);
 
   @override
   Widget build(BuildContext context) {
     return Row(
       mainAxisAlignment: MainAxisAlignment.spaceEvenly,
       children: List.generate(
-          items.length, (index) => _MenuItem(index, items[index])),
+          items.length,
+          (index) =>
+              _MenuItem(index, items[index], activeColor, inactiveColor)),
     );
   }
 }
@@ -69,7 +85,9 @@ class _MenuItems extends StatelessWidget {
 class _MenuItem extends StatelessWidget {
   final int index;
   final ItemMenu item;
-  const _MenuItem(this.index, this.item);
+  final Color activeColor;
+  final Color inactiveColor;
+  const _MenuItem(this.index, this.item, this.activeColor, this.inactiveColor);
 
   @override
   Widget build(BuildContext context) {
@@ -79,7 +97,7 @@ class _MenuItem extends StatelessWidget {
       child: Icon(
         item.icon,
         size: currentIndex == index ? 32 : 24,
-        color: currentIndex == index ? Colors.amber : Colors.black26,
+        color: currentIndex == index ? activeColor : inactiveColor,
       ),
       onTap: () {
         provider.index = index;

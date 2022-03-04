@@ -1,5 +1,7 @@
+import 'package:animations/src/theme/theme.dart';
 import 'package:animations/src/widgets/radial_progress.dart';
 import 'package:flutter/material.dart';
+import 'package:provider/provider.dart';
 
 class CircularGraphPage extends StatefulWidget {
   const CircularGraphPage({Key? key}) : super(key: key);
@@ -59,7 +61,7 @@ class _CircularGraphPageState extends State<CircularGraphPage> {
                       Color(0xFFC12A2A),
                       Color(0xFF0D00FF),
                       Color(0xFFE1710F),
-                    ],stops: [
+                    ], stops: [
                       .25,
                       .5,
                       .1
@@ -110,12 +112,14 @@ class CustomRadial extends StatelessWidget {
   final Gradient? gradient;
   @override
   Widget build(BuildContext context) {
+    final appTheme = Provider.of<ThemeChanger>(context).currentTheme;
     return Container(
-      width: 180,
-      height: 180,
+      width: 150,
+      height: 150,
       child: RadialProgess(
         percentage: percentage,
         color: color,
+        strokeColor: appTheme.textTheme.bodyText1!.color!,
         strokeWidth: 10,
         percentageWidth: 9,
         gradient: this.gradient,

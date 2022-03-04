@@ -1,22 +1,19 @@
-// import 'package:animations/src/pages/animation_page.dart';
-// import 'package:a nimations/src/pages/headers_pages.dart';
-// import 'package:animations/src/challenges/square_animate_page.dart';
-// import 'package:animations/src/labs/circular_progress_page.dart';
-// import 'package:animations/src/pages/circular_graph_pages.dart';
-// import 'package:animations/src/pages/slide_show_page.dart';
-// import 'package:animations/src/pages/pinterest_page.dart';
-// import 'package:animations/src/pages/emergency_page.dart';
-import 'package:animations/src/pages/sliver_page.dart';
+import 'package:animations/src/pages/launcher_page.dart';
+import 'package:animations/src/theme/theme.dart';
 import 'package:flutter/material.dart';
+import 'package:provider/provider.dart';
 
-void main() => runApp(MyApp());
+void main() => runApp(ChangeNotifierProvider(
+    create: (_) => new ThemeChanger(23), child: MyApp()));
 
 class MyApp extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
+    final theme = Provider.of<ThemeChanger>(context);
     return MaterialApp(
+        theme: theme.currentTheme,
         title: 'Material App',
         debugShowCheckedModeBanner: false,
-        home: SliverPage());
+        home: LauncherPage());
   }
 }

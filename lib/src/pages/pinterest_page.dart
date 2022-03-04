@@ -1,3 +1,4 @@
+import 'package:animations/src/theme/theme.dart';
 import 'package:animations/src/widgets/floating_menu.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_staggered_grid_view/flutter_staggered_grid_view.dart';
@@ -31,6 +32,7 @@ class _Menu extends StatelessWidget {
     final show = Provider.of<_PageState>(
       context,
     ).show;
+    final appTheme = Provider.of<ThemeChanger>(context).currentTheme;
     return Positioned(
         bottom: 30,
         child: Container(

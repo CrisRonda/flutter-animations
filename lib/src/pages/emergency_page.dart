@@ -1,8 +1,10 @@
 import 'package:animate_do/animate_do.dart';
+import 'package:animations/src/theme/theme.dart';
 import 'package:animations/src/widgets/headers.dart';
 import 'package:animations/src/widgets/service_button.dart';
 import 'package:flutter/material.dart';
 import 'package:font_awesome_flutter/font_awesome_flutter.dart';
+import 'package:provider/provider.dart';
 
 class ServiceButtonProps {
   final IconData icon;
@@ -18,6 +20,8 @@ class EmergencyPage extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    final currentTheme = Provider.of<ThemeChanger>(context);
+    final isDarkMode = currentTheme.darkTheme;
     final items = <ServiceButtonProps>[
       new ServiceButtonProps(FontAwesomeIcons.carCrash, 'Motor Accident',
           Color(0xff6989F5), Color(0xff906EF5)),
@@ -59,33 +63,35 @@ class EmergencyPage extends StatelessWidget {
             ))
         .toList();
     return Scaffold(
-        backgroundColor: Colors.white,
         body: Stack(children: [
-          Container(
-            margin: EdgeInsets.only(top: 250),
-            child: ListView(
-              physics: BouncingScrollPhysics(),
-              children: [
-                SizedBox(height: 32),
-                ...itemMap,
-              ],
-            ),
-          ),
-          PageHeader()
-        ]));
+      Container(
+        margin: EdgeInsets.only(top: 250),
+        child: ListView(
+          physics: BouncingScrollPhysics(),
+          children: [
+            SizedBox(height: 32),
+            ...itemMap,
+          ],
+        ),
+      ),
+      PageHeader()
+    ]));
   }
 }
 
 class PageHeader extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
+    final currentTheme = Provider.of<ThemeChanger>(context);
+    final isDarkMode = currentTheme.darkTheme;
+
     return Stack(children: [
       IconHeader(
         icon: FontAwesomeIcons.plusCircle,
         title: "Haz solicitado",
         subtitle: "Asistencia medica",
-        primaryColorBg: Colors.blueGrey,
-        secondColorBg: Colors.grey,
+        primaryColorBg: isDarkMode ? Colors.black : Colors.blueGrey,
+        secondColorBg: isDarkMode ? Colors.amber : Colors.grey,
       ),
       Positioned(
           top: 40,
